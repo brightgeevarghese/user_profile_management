@@ -4,10 +4,7 @@ import com.bright.upms.dto.request.UserRequestDto;
 import com.bright.upms.dto.response.UserResponseDto;
 import com.bright.upms.model.Profile;
 import com.bright.upms.model.User;
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -17,6 +14,12 @@ public interface UserMapper {
     @Mapping(source = "profileRequestDto", target = "profile")
     User userRequestDtoToUser(UserRequestDto userRequestDto);
 
+    //Convert a User to UserResponseDto
+    @Mapping(source = "profile", target = "profileResponseDto")
+    UserResponseDto userToUserResponseDto(User user);
+
+    @Mapping(source = "profile", target = "profileResponseDto")
+    List<UserResponseDto> userToUserResponseDtoList(List<User> userList);
 
     void updateUserFromUserRequestDto(UserRequestDto userRequestDto, @MappingTarget User existingUser);
 
@@ -35,10 +38,11 @@ public interface UserMapper {
         }
     }
 
-    //Convert a User to UserResponseDto
-    @Mapping(source = "profile", target = "profileResponseDto")
-    UserResponseDto userToUserResponseDto(User user);
-
-    @Mapping(source = "profile", target = "profileResponseDto")
-    List<UserResponseDto> userToUserResponseDtoList(List<User> userList);
+    @BeforeMapping
+    default void beforeUserUpdate(UserRequestDto userRequestDto, @MappingTarget User existingUser) {
+        System.out.println("Before updating User.  Request: " + userRequestDto + ", Existing User: " );
+        if (userRequestDto.username() == null || userRequestDto.username().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty");
+        }
+    }
 }

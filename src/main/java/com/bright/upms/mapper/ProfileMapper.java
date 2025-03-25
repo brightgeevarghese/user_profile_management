@@ -9,5 +9,4 @@ public interface ProfileMapper {
 
     Profile profileRequestDtoToProfile(ProfileRequestDto profileRequestDto);
 
-    ProfileRequestDto profileToProfileRequestDto(Profile profile);
 }
