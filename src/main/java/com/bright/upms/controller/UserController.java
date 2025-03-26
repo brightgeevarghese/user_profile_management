@@ -3,6 +3,7 @@ package com.bright.upms.controller;
 import com.bright.upms.dto.request.UserRequestDto;
 import com.bright.upms.dto.response.UserResponseDto;
 import com.bright.upms.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<UserResponseDto> createUser(@RequestBody @Valid UserRequestDto userRequestDto) {
         Optional<UserResponseDto> userResponseDto = userService.createUser(userRequestDto);
         if (userResponseDto.isPresent()) {
             return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto.get());
@@ -46,7 +47,7 @@ public class UserController {
     }
 
     @PutMapping("/{username}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable String username, @RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable String username, @RequestBody @Valid UserRequestDto userRequestDto) {
         Optional<UserResponseDto> userResponseDto = userService.updateUser(username, userRequestDto);
         if (userResponseDto.isPresent()) {
             return ResponseEntity.ok(userResponseDto.get());
